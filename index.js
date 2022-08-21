@@ -1,10 +1,9 @@
 // Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
-const { default: Choices } = require('inquirer/lib/objects/choices');
 
 // Create an array of questions for user input
-const questions = [
+const managerQuestions = [
     {
         type: 'input',
         name: 'managerName',
@@ -12,7 +11,7 @@ const questions = [
     },
     {
         type: 'input',
-        name: 'employeeID',
+        name: 'managerID',
         message: 'Employee ID:'
     },
     {
@@ -27,11 +26,46 @@ const questions = [
     },
     {
         type: 'list',
-        name: 'employee',
+        name: 'option',
         message: 'Add an employee or finish team.',
         choices: ['engineer', 'intern', 'finished']
     },
 ];
+
+const engineerQuestions = [
+    {
+        type: 'input',
+        name: 'engineerName',
+        message: "Engineer's name:"
+    },
+    {
+        type: 'input',
+        name: 'engineerID',
+        message: 'Employee ID:'
+    },
+    {
+        type: 'input',
+        name: 'engineerEmail',
+        message: 'Email address:'
+    },
+    {
+        type: 'input',
+        name: 'engineerGitHub',
+        message: 'GitHub:'
+    },
+];
+
+function getEngineer() {
+    inquirer
+        .prompt(engineerQuestions)
+        .then(engineerInfo => {
+            return engineerInfo;
+        })
+}
+
+function getIntern() {
+    console.log('Intern')
+}
 
 // Create a function to write HTML file
 function writeToFile(data) {
@@ -47,21 +81,41 @@ function writeToFile(data) {
         <h1>My Team</h1>
     </header>
     <body>
-        
+        <div class='employees'>
+            <div class='manager'>
+                <h2>${data.managerName}</h2>
+                <h3>Manager</h3>
+                <div>
+                    <div>
+                        <p>ID:${data.managerID}</p>
+                        <a href="mailto:${data.managerEmail}">Email:${data.managerEmail}</a>
+                        <p>Office number:${data.managerOfficeNumber}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
     </html>`
 }
 
 // Create a function to initialize app
-function init() {
+function getManager() {
     inquirer
-        .prompt(questions)
+        .prompt(managerQuestions)
         .then(data => {
-            fs.writeFile(`index.html`, writeToFile(data), err => 
-                err ? console.log(err) : console.log('HTML file created successfully!')
-            );
+            if (data.option === 'engineer') {
+                getEngineer();
+                return getManager();
+            } else if (data.option === 'intern') {
+                getIntern()
+            } else {
+                fs.writeFile(`index.html`, writeToFile(data), err =>
+                    err ? console.log(err) : console.log('HTML file created successfully!')
+                )
+            }
+
         });
 }
 
 // Function call to initialize app
-init();
+getManager();
