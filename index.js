@@ -7,22 +7,55 @@ const managerQuestions = [
     {
         type: 'input',
         name: 'managerName',
-        message: "Team manager's name:"
+        message: "Team manager's name:",
+        validate: nameInput => {
+            if (nameInput) {
+                return true;
+            } else {
+                console.log("Please enter the manager's name!")
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'managerID',
-        message: 'Employee ID:'
+        message: 'Manager ID:',
+        validate: inputID => {
+            if (inputID) {
+                return true;
+            } else {
+                console.log("Please enter the manager's ID!")
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'managerEmail',
-        message: 'Email address:'
+        message: 'Email address:',
+        validate: email => {
+            validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+            if (validEmail) {
+                return true;
+            } else {
+                console.log("Please enter a valid email!")
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'managerOfficeNumber',
-        message: 'Office number:'
+        message: 'Office number:',
+        validate: officeNumber => {
+            if (officeNumber) {
+                return true;
+            } else {
+                console.log("Please enter the manager's office number!")
+                return false;
+            }
+        }
     },
     {
         type: 'list',
@@ -36,24 +69,113 @@ const engineerQuestions = [
     {
         type: 'input',
         name: 'engineerName',
-        message: "Engineer's name:"
+        message: "Engineer's name:",
+        validate: nameInput => {
+            if (nameInput) {
+                return true;
+            } else {
+                console.log("Please enter the engineer's name!")
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'engineerID',
-        message: 'Employee ID:'
+        message: 'Employee ID:',
+        validate: inputID => {
+            if (inputID) {
+                return true;
+            } else {
+                console.log("Please enter the employee's ID!")
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'engineerEmail',
-        message: 'Email address:'
+        message: 'Email address:',
+        validate: email => {
+            validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+            if (validEmail) {
+                return true;
+            } else {
+                console.log("Please enter a valid email!")
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'engineerGitHub',
-        message: 'GitHub:'
+        message: 'GitHub Username:',
+        validate: github => {
+            if (github) {
+                return true;
+            } else {
+                console.log("Please enter the employee's ID!")
+                return false;
+            }
+        }
     },
 ];
+
+const internQuestions = [
+    {
+        type: 'input',
+        name: 'internName',
+        message: "Intern's name:",
+        validate: nameInput => {
+            if (nameInput) {
+                return true;
+            } else {
+                console.log("Please enter the intern's name!")
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'internID',
+        message: 'Intern ID:',
+        validate: inputID => {
+            if (inputID) {
+                return true;
+            } else {
+                console.log("Please enter the intern's ID!")
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'internEmail',
+        message: 'Email address:',
+        validate: email => {
+            validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+            if (validEmail) {
+                return true;
+            } else {
+                console.log("Please enter a valid email!")
+                return false;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'internSchool',
+        message: 'Intern School:',
+        validate: inputID => {
+            if (inputID) {
+                return true;
+            } else {
+                console.log("Please enter the intern's ID!")
+                return false;
+            }
+        }
+    }
+]
 
 function getEngineer() {
     inquirer
@@ -64,7 +186,11 @@ function getEngineer() {
 }
 
 function getIntern() {
-    console.log('Intern')
+    inquirer
+        .prompt(internQuestions)
+        .then(internInfo => {
+            return internInfo;
+        })
 }
 
 // Create a function to write HTML file
@@ -105,7 +231,8 @@ function getManager() {
         .then(data => {
             if (data.option === 'engineer') {
                 getEngineer();
-                return getManager();
+                
+                // return managerChoice();
             } else if (data.option === 'intern') {
                 getIntern()
             } else {
