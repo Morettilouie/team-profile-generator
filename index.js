@@ -1,12 +1,27 @@
 // Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
+const Manager = require("./lib/Manager");
+const Engineer = require('./lib/Engineer');
+
+// array of employees
+let employees = []
+
+// add employee prompt
+const employeeQuestion = [
+    {
+        type: 'list',
+        name: 'option',
+        message: 'Add an employee or finish team.',
+        choices: ['engineer', 'intern', 'finished']
+    }
+]
 
 // Create an array of questions for user input
 const managerQuestions = [
     {
         type: 'input',
-        name: 'managerName',
+        name: 'name',
         message: "Team manager's name:",
         validate: nameInput => {
             if (nameInput) {
@@ -19,10 +34,10 @@ const managerQuestions = [
     },
     {
         type: 'input',
-        name: 'managerID',
+        name: 'id',
         message: 'Manager ID:',
-        validate: inputID => {
-            if (inputID) {
+        validate: id => {
+            if (id) {
                 return true;
             } else {
                 console.log("Please enter the manager's ID!")
@@ -32,7 +47,7 @@ const managerQuestions = [
     },
     {
         type: 'input',
-        name: 'managerEmail',
+        name: 'email',
         message: 'Email address:',
         validate: email => {
             validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
@@ -46,7 +61,7 @@ const managerQuestions = [
     },
     {
         type: 'input',
-        name: 'managerOfficeNumber',
+        name: 'officeNumber',
         message: 'Office number:',
         validate: officeNumber => {
             if (officeNumber) {
@@ -57,18 +72,12 @@ const managerQuestions = [
             }
         }
     },
-    {
-        type: 'list',
-        name: 'option',
-        message: 'Add an employee or finish team.',
-        choices: ['engineer', 'intern', 'finished']
-    },
 ];
 
 const engineerQuestions = [
     {
         type: 'input',
-        name: 'engineerName',
+        name: 'name',
         message: "Engineer's name:",
         validate: nameInput => {
             if (nameInput) {
@@ -81,7 +90,7 @@ const engineerQuestions = [
     },
     {
         type: 'input',
-        name: 'engineerID',
+        name: 'id',
         message: 'Employee ID:',
         validate: inputID => {
             if (inputID) {
@@ -94,7 +103,7 @@ const engineerQuestions = [
     },
     {
         type: 'input',
-        name: 'engineerEmail',
+        name: 'email',
         message: 'Email address:',
         validate: email => {
             validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
@@ -108,7 +117,7 @@ const engineerQuestions = [
     },
     {
         type: 'input',
-        name: 'engineerGitHub',
+        name: 'github',
         message: 'GitHub Username:',
         validate: github => {
             if (github) {
@@ -124,7 +133,7 @@ const engineerQuestions = [
 const internQuestions = [
     {
         type: 'input',
-        name: 'internName',
+        name: 'name',
         message: "Intern's name:",
         validate: nameInput => {
             if (nameInput) {
@@ -137,7 +146,7 @@ const internQuestions = [
     },
     {
         type: 'input',
-        name: 'internID',
+        name: 'id',
         message: 'Intern ID:',
         validate: inputID => {
             if (inputID) {
@@ -150,7 +159,7 @@ const internQuestions = [
     },
     {
         type: 'input',
-        name: 'internEmail',
+        name: 'email',
         message: 'Email address:',
         validate: email => {
             validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
@@ -164,7 +173,7 @@ const internQuestions = [
     },
     {
         type: 'input',
-        name: 'internSchool',
+        name: 'school',
         message: 'Intern School:',
         validate: inputID => {
             if (inputID) {
@@ -181,7 +190,10 @@ function getEngineer() {
     inquirer
         .prompt(engineerQuestions)
         .then(engineerInfo => {
-            return engineerInfo;
+            const { name, id, email, github } = engineerInfo;
+            const engineer = new Engineer(name, id, email, github);
+            employees.push(engineer);
+            console.log(engineer);
         })
 }
 
@@ -189,7 +201,10 @@ function getIntern() {
     inquirer
         .prompt(internQuestions)
         .then(internInfo => {
-            return internInfo;
+            const { name, id, email, school } = internInfo;
+            const intern = new Intern(name, id, email, school);
+            employees.push(intern);
+            console.log(intern);
         })
 }
 
@@ -225,24 +240,41 @@ function writeToFile(data) {
 }
 
 // Create a function to initialize app
+function startApp() {
+    // getManager();
+    addEmployee();
+}
+
 function getManager() {
     inquirer
         .prompt(managerQuestions)
-        .then(data => {
-            if (data.option === 'engineer') {
-                getEngineer();
-                
-                // return managerChoice();
-            } else if (data.option === 'intern') {
-                getIntern()
-            } else {
-                fs.writeFile(`index.html`, writeToFile(data), err =>
-                    err ? console.log(err) : console.log('HTML file created successfully!')
-                )
-            }
+        .then(managerInfo => {
+            const { name, id, email, officeNumber } = managerInfo;
+            const manager = new Manager(name, id, email, officeNumber);
+            employees.push(manager);
+            console.log(manager);
+
 
         });
 }
 
+function addEmployee() {
+    inquirer
+        .prompt(employeeQuestion)
+        .then(data => {
+            if (data.option === 'engineer') {
+                getEngineer();
+
+                // return managerChoice();
+            } else if (data.option === 'intern') {
+                getIntern()
+            } else {
+                fs.writeFile(`index.html`, writeToFile(managerData), err =>
+                    err ? console.log(err) : console.log('HTML file created successfully!')
+                )
+            }
+        })
+}
+
 // Function call to initialize app
-getManager();
+startApp();
