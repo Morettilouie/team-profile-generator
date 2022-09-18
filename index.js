@@ -4,9 +4,11 @@ const fs = require('fs');
 const Manager = require("./lib/Manager");
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
+const Employee = require('./lib/Employee');
+const htmlPage = require('./html');
 
 // array of employees
-let employees = []
+let employees = [];
 
 // add employee prompt
 const employeeQuestion = [
@@ -187,38 +189,6 @@ const internQuestions = [
     }
 ]
 
-
-// Create a function to write HTML file
-function writeToFile(data) {
-    return `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <header>
-        <h1>My Team</h1>
-    </header>
-    <body>
-        <div class='employees'>
-            <div class='manager'>
-                <h2>${data.managerName}</h2>
-                <h3>Manager</h3>
-                <div>
-                    <div>
-                        <p>ID:${data.managerID}</p>
-                        <a href="mailto:${data.managerEmail}">Email:${data.managerEmail}</a>
-                        <p>Office number:${data.managerOfficeNumber}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>`
-}
-
 // Create a function to initialize app
 
     
@@ -252,7 +222,8 @@ function addEmployee() {
 
 
             } else {
-                fs.writeFile(`index.html`, writeToFile(managerData), err =>
+
+                fs.writeFile(`index.html`, writeToFile(employees), err =>
                     err ? console.log(err) : console.log('HTML file created successfully!')
                 )
             }
@@ -279,6 +250,42 @@ function getIntern() {
             employees.push(intern);
             console.log(intern);
         })
+}
+
+
+
+// Create a function to write HTML file
+function writeToFile(employees) {
+    console.log(employees.managers);
+    console.log(employees)
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <header>
+        <h1>My Team</h1>
+    </header>
+    <body>
+        <div class='employees'>
+            <div class='manager'>
+                <h2>Manager</h2>
+                <h5>${employees[0].name}</h5>
+                <div>
+                    <div>
+                        <p>ID:${employees[0].id}</p>
+                        <a href="mailto:${employees[0].email}">Email:${employees[0].email}</a>
+                        <p>Office number:${employees[0].officeNumber}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>`;
 }
 
 // Function call to initialize app

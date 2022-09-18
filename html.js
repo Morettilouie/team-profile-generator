@@ -1,4 +1,6 @@
-
+// create manager
+function managerSection(manager) {
+    return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -13,16 +15,19 @@
     <body>
         <div class='employees'>
             <div class='manager'>
-                <h2>Manager</h2>
-                <h5>ldld</h5>
+                <h2>${manager.name}</h2>
+                <h3>Manager</h3>
                 <div>
                     <div>
-                        <p>ID:dj</p>
-                        <a href="mailto:d@d.dd">Email:d@d.dd</a>
-                        <p>Office number:odod</p>
+                        <p>ID:${manager.id}</p>
+                        <a href="mailto:${manager.email}">Email:${manager.email}</a>
+                        <p>Office number:${manager.officeNumber}</p>
                     </div>
                 </div>
             </div>
         </div>
     </body>
-    </html>
+    </html>`;
+}
+
+module.exports = managerSection;
