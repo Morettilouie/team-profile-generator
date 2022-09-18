@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const Manager = require("./lib/Manager");
 const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Engineer');
 
 // array of employees
 let employees = []
@@ -187,7 +188,7 @@ const internQuestions = [
 ]
 
 function getEngineer() {
-    inquirer
+    return inquirer
         .prompt(engineerQuestions)
         .then(engineerInfo => {
             const { name, id, email, github } = engineerInfo;
@@ -198,7 +199,7 @@ function getEngineer() {
 }
 
 function getIntern() {
-    inquirer
+    return inquirer
         .prompt(internQuestions)
         .then(internInfo => {
             const { name, id, email, school } = internInfo;
@@ -240,13 +241,12 @@ function writeToFile(data) {
 }
 
 // Create a function to initialize app
-function startApp() {
-    // getManager();
-    addEmployee();
-}
+
+    
+
 
 function getManager() {
-    inquirer
+    return inquirer
         .prompt(managerQuestions)
         .then(managerInfo => {
             const { name, id, email, officeNumber } = managerInfo;
@@ -263,11 +263,15 @@ function addEmployee() {
         .prompt(employeeQuestion)
         .then(data => {
             if (data.option === 'engineer') {
-                getEngineer();
+                console.log(employees);
+                getEngineer().then(addEmployee);
 
-                // return managerChoice();
+                
             } else if (data.option === 'intern') {
-                getIntern()
+                console.log(employees);
+                getIntern().then(addEmployee);
+
+
             } else {
                 fs.writeFile(`index.html`, writeToFile(managerData), err =>
                     err ? console.log(err) : console.log('HTML file created successfully!')
@@ -277,4 +281,8 @@ function addEmployee() {
 }
 
 // Function call to initialize app
-startApp();
+getManager()
+        .then(addEmployee)
+        .catch(err => {
+            console.log(err)
+        });
