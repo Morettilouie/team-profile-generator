@@ -3,7 +3,7 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const Manager = require("./lib/Manager");
 const Engineer = require('./lib/Engineer');
-const Intern = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
 
 // array of employees
 let employees = []
@@ -187,27 +187,6 @@ const internQuestions = [
     }
 ]
 
-function getEngineer() {
-    return inquirer
-        .prompt(engineerQuestions)
-        .then(engineerInfo => {
-            const { name, id, email, github } = engineerInfo;
-            const engineer = new Engineer(name, id, email, github);
-            employees.push(engineer);
-            console.log(engineer);
-        })
-}
-
-function getIntern() {
-    return inquirer
-        .prompt(internQuestions)
-        .then(internInfo => {
-            const { name, id, email, school } = internInfo;
-            const intern = new Intern(name, id, email, school);
-            employees.push(intern);
-            console.log(intern);
-        })
-}
 
 // Create a function to write HTML file
 function writeToFile(data) {
@@ -277,6 +256,28 @@ function addEmployee() {
                     err ? console.log(err) : console.log('HTML file created successfully!')
                 )
             }
+        })
+}
+
+function getEngineer() {
+    return inquirer
+        .prompt(engineerQuestions)
+        .then(engineerInfo => {
+            const { name, id, email, github } = engineerInfo;
+            const engineer = new Engineer(name, id, email, github);
+            employees.push(engineer);
+            console.log(engineer);
+        })
+}
+
+function getIntern() {
+    return inquirer
+        .prompt(internQuestions)
+        .then(internInfo => {
+            const { name, id, email, school } = internInfo;
+            const intern = new Intern(name, id, email, school);
+            employees.push(intern);
+            console.log(intern);
         })
 }
 
