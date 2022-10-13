@@ -1,11 +1,10 @@
 // Include packages needed for this application
 const inquirer = require('inquirer');
-const fs = require('fs');
 const Manager = require("./lib/Manager");
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-const Employee = require('./lib/Employee');
-const htmlPage = require('./html');
+const template = require('./src/html');
+const writeFile = require('./src/writeFile');
 
 // array of employees
 let employees = [];
@@ -190,10 +189,6 @@ const internQuestions = [
 ]
 
 // Create a function to initialize app
-
-    
-
-
 function getManager() {
     return inquirer
         .prompt(managerQuestions)
@@ -215,17 +210,17 @@ function addEmployee() {
                 console.log(employees);
                 getEngineer().then(addEmployee);
 
-                
+
             } else if (data.option === 'intern') {
                 console.log(employees);
                 getIntern().then(addEmployee);
 
 
             } else {
-
-                fs.writeFile(`index.html`, writeToFile(employees), err =>
-                    err ? console.log(err) : console.log('HTML file created successfully!')
-                )
+                let html = template(employees)
+                console.log('...');
+                // creates HTML file
+                writeFile(html);
             }
         })
 }
@@ -250,42 +245,6 @@ function getIntern() {
             employees.push(intern);
             console.log(intern);
         })
-}
-
-
-
-// Create a function to write HTML file
-function writeToFile(employees) {
-    console.log(employees.managers);
-    console.log(employees)
-    return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <header>
-        <h1>My Team</h1>
-    </header>
-    <body>
-        <div class='employees'>
-            <div class='manager'>
-                <h2>Manager</h2>
-                <h5>${employees[0].name}</h5>
-                <div>
-                    <div>
-                        <p>ID:${employees[0].id}</p>
-                        <a href="mailto:${employees[0].email}">Email:${employees[0].email}</a>
-                        <p>Office number:${employees[0].officeNumber}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>`;
 }
 
 // Function call to initialize app
